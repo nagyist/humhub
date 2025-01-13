@@ -1,7 +1,7 @@
 <?php
 return array (
   '<strong>Confirm</strong> comment deleting' => '<strong>Conferma</strong> la cancellazione del commento',
-  '<strong>Delete</strong> comment?' => '',
+  '<strong>Delete</strong> comment?' => '<strong>Eliminare</strong> commento?',
   '<strong>Permalink</strong> to this comment' => '<strong>Link permanente</strong> a questo commento',
   'Cancel' => 'Annulla',
   'Cancel Edit' => 'Annulla Modifica',
@@ -19,14 +19,14 @@ return array (
   'Read full comment...' => 'Leggi il commento completo...',
   'Reason' => 'Motivo',
   'Reply' => 'Rispondi',
-  'Send a notification to author' => '',
+  'Send a notification to author' => 'Invia una notifica all\'autore',
   'Show' => 'Mostra',
-  'Show all {total} comments' => 'Mostra tutti i {total} commenti',
-  'Show {count} more comments' => 'Mostra altri {count} commenti',
+  'Show next {count} comments' => 'Mostra i prossimi {count} commenti',
+  'Show previous {count} comments' => 'Mostra i commenti {count} precedenti',
   'The comment must not be empty!' => 'Il commento non può essere vuoto!',
   'Whenever a new comment was written.' => 'Ogni volta che è stato scritto un nuovo commento.',
   'Write a new comment...' => 'Scrivi un nuovo commento...',
   'Write a new reply...' => 'Scrivi una nuova risposta',
-  'comment' => 'Commenta',
+  'comment' => 'commento',
   '{displayName} wrote a new comment ' => '{displayName} ha scritto un nuovo commento',
 );

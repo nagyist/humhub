@@ -8,6 +8,7 @@
 
 namespace humhub\modules\user\models\fieldtype;
 
+use humhub\modules\user\models\Profile;
 use humhub\modules\user\models\User;
 use Yii;
 
@@ -19,33 +20,25 @@ use Yii;
  */
 class TextArea extends BaseType
 {
-
     /**
-     * Rules for validating the Field Type Settings Form
-     *
-     * @return type
+     * @inheritdoc
      */
-    public function rules()
-    {
-        return [
-                #array('maxLength, alphaNumOnly', 'safe'),
-        ];
-    }
+    public $type = 'textarea';
 
     /**
      * Returns Form Definition for edit/create this field.
      *
-     * @return Array Form Definition
+     * @return array Form Definition
      */
     public function getFormDefinition($definition = [])
     {
         return parent::getFormDefinition([
-                    get_class($this) => [
-                        'type' => 'form',
-                        'title' => Yii::t('UserModule.profile', 'Text area field options'),
-                        'elements' => [
-                        ]
-        ]]);
+            get_class($this) => [
+                'type' => 'form',
+                'title' => Yii::t('UserModule.profile', 'Text area field options'),
+                'elements' => [
+                ],
+            ]]);
     }
 
     /**
@@ -54,23 +47,19 @@ class TextArea extends BaseType
     public function save()
     {
         $columnName = $this->profileField->internal_name;
-        if (!\humhub\modules\user\models\Profile::columnExists($columnName)) {
-            $query = Yii::$app->db->getQueryBuilder()->addColumn(\humhub\modules\user\models\Profile::tableName(), $columnName, 'TEXT');
+        if (!Profile::columnExists($columnName)) {
+            $query = Yii::$app->db->getQueryBuilder()->addColumn(Profile::tableName(), $columnName, 'TEXT');
             Yii::$app->db->createCommand($query)->execute();
         }
-        
+
         return parent::save();
     }
 
     /**
-     * Returns the Field Rules, to validate users input
-     *
-     * @param type $rules
-     * @return type
+     * @inheritdoc
      */
     public function getFieldRules($rules = [])
     {
-
         $rules[] = [$this->profileField->internal_name, 'safe'];
 
         return parent::getFieldRules($rules);
@@ -79,15 +68,11 @@ class TextArea extends BaseType
     /**
      * @inheritdoc
      */
-    public function getFieldFormDefinition(User $user = null)
+    public function getFieldFormDefinition(User $user = null, array $options = []): array
     {
-        return [$this->profileField->internal_name => [
-                'type' => 'textarea',
-                'class' => 'form-control',
-                'rows' => '3'
-        ]];
+        return parent::getFieldFormDefinition($user, array_merge([
+            'rows' => '3',
+        ], $options));
     }
 
 }
-
-?>

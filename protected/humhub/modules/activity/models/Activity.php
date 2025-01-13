@@ -9,13 +9,11 @@
 namespace humhub\modules\activity\models;
 
 use humhub\modules\activity\components\BaseActivity;
-
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use humhub\modules\content\components\ContentActiveRecord;
-use humhub\modules\activity\components\ActivityWebRenderer;
 use humhub\components\behaviors\PolymorphicRelation;
 use yii\db\IntegrityException;
 use humhub\modules\activity\widgets\Activity as ActivityStreamEntryWidget;
@@ -23,17 +21,16 @@ use humhub\modules\activity\widgets\Activity as ActivityStreamEntryWidget;
 /**
  * This is the model class for table "activity".
  *
- * @property integer $id
+ * @property int $id
  * @property string $class
  * @property string $module
  * @property string $object_model
- * @property integer $object_id
+ * @property int $object_id
  *
  * @mixin PolymorphicRelation
  */
 class Activity extends ContentActiveRecord
 {
-
     /**
      * @inheritdoc
      */
@@ -65,8 +62,8 @@ class Activity extends ContentActiveRecord
                 'strict' => true,
                 'mustBeInstanceOf' => [
                     ActiveRecord::class,
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -86,7 +83,7 @@ class Activity extends ContentActiveRecord
         return [
             [['object_id'], 'integer'],
             [['class'], 'string', 'max' => 100],
-            [['module', 'object_model'], 'string', 'max' => 100]
+            [['module', 'object_model'], 'string', 'max' => 100],
         ];
     }
 
@@ -118,10 +115,19 @@ class Activity extends ContentActiveRecord
      *
      * @return mixed
      * @throws IntegrityException
-     * @see \humhub\modules\activity\components\BaseActivity::$source
+     * @see BaseActivity
      */
     public function getSource()
     {
         return $this->getPolymorphicRelation();
+    }
+
+    /**
+     * @return bool|int
+     */
+    public function delete()
+    {
+        // Always hard delete activities
+        return $this->hardDelete();
     }
 }

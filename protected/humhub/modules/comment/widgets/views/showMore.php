@@ -1,12 +1,16 @@
 <?php
 
-/* @var $this \humhub\modules\ui\view\components\View */
-/* @var $moreCount int */
-/* @var $showMoreUrl string */
+use humhub\modules\comment\widgets\ShowMore;
+use humhub\widgets\Link;
 
+/* @var $text string */
+/* @var $showMoreUrl string */
+/* @var $type string */
+/* @var $linkStyleClass string */
 ?>
 <div class="showMore">
-    <a href="#" data-action-click="comment.showMore" data-action-url="<?= $showMoreUrl ?>">
-        <?= Yii::t('CommentModule.base', "Show {count} more comments", ['{count}' => $moreCount]) ?>
-    </a>
+    <?php if ($type == ShowMore::TYPE_NEXT) : ?>
+        <hr class="comment-separator">
+    <?php endif; ?>
+    <?= Link::withAction($text, 'comment.showMore', $showMoreUrl)->options(['data-type' => $type])->cssClass($linkStyleClass) ?>
 </div>

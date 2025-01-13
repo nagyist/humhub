@@ -2,14 +2,14 @@
 
 namespace humhub\modules\comment\widgets;
 
+use humhub\components\behaviors\PolymorphicRelation;
+use humhub\components\Widget;
 use humhub\modules\comment\models\Comment as CommentModel;
 use humhub\modules\comment\Module;
 use humhub\modules\content\components\ContentActiveRecord;
-use humhub\components\Widget;
 use humhub\modules\content\widgets\stream\StreamEntryOptions;
 use humhub\modules\content\widgets\stream\WallStreamEntryOptions;
 use Yii;
-use yii\helpers\Url;
 
 /**
  * This widget is used include the comments functionality to a wall entry.
@@ -25,8 +25,8 @@ use yii\helpers\Url;
  */
 class Comments extends Widget
 {
-    const VIEW_MODE_COMPACT = 'compact';
-    const VIEW_MODE_FULL = 'full';
+    public const VIEW_MODE_COMPACT = 'compact';
+    public const VIEW_MODE_FULL = 'full';
 
     /**
      * @var Comment|ContentActiveRecord
@@ -63,7 +63,7 @@ class Comments extends Widget
      */
     public function run()
     {
-        $objectModel = get_class($this->object);
+        $objectModel = PolymorphicRelation::getObjectModel($this->object);
         $objectId = $this->object->getPrimaryKey();
 
         $streamQuery = Yii::$app->request->getQueryParam('StreamQuery');
@@ -76,14 +76,13 @@ class Comments extends Widget
             $comments = CommentModel::GetCommentsLimited($objectModel, $objectId, $this->limit, $currentCommentId);
         }
 
+        $this->view->registerJsVar('comments_collapsed', $this->limit == 0);
+
         return $this->render('comments', [
             'object' => $this->object,
             'comments' => $comments,
             'currentCommentId' => $currentCommentId,
             'id' => $this->object->getUniqueId(),
-            'isLimited' => $commentCount > $this->limit,
-            'total' => $commentCount,
-            'showMoreUrl' => $this->getShowMoreUrl(),
         ]);
     }
 
@@ -101,21 +100,5 @@ class Comments extends Widget
     public function getPageSize(): int
     {
         return $this->isFullViewMode() ? $this->module->commentsBlockLoadSizeViewMode : $this->module->commentsBlockLoadSize;
-    }
-
-    private function getShowMoreUrl(): string
-    {
-        $urlParams = ['/comment/comment/show',
-            'objectModel' => get_class($this->object),
-            'objectId' => $this->object->getPrimaryKey(),
-            'pageSize' => $this->pageSize,
-        ];
-
-        if ($this->pageSize <= $this->limit) {
-            // We should load second page together with first because on init page we already see the first page
-            $urlParams['pageNum'] = 2;
-        }
-
-        return Url::to($urlParams);
     }
 }

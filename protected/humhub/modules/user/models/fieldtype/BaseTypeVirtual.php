@@ -20,6 +20,10 @@ use humhub\modules\user\models\User;
  */
 abstract class BaseTypeVirtual extends BaseType
 {
+    /**
+     * @inheritdoc
+     */
+    public $type = 'hidden';
 
     /**
      * @inheritdoc
@@ -44,19 +48,18 @@ abstract class BaseTypeVirtual extends BaseType
             get_class($this) => [
                 'type' => 'form',
                 'title' => '',
-                'elements' => []
+                'elements' => [],
             ]]);
     }
 
     /**
      * @inheritdoc
      */
-    public function getFieldFormDefinition(User $user = null)
+    public function getFieldFormDefinition(User $user = null, array $options = []): array
     {
-        return [$this->profileField->internal_name => [
-            'type' => 'hidden',
+        return parent::getFieldFormDefinition($user, array_merge([
             'isVisible' => false,
-        ]];
+        ], $options));
     }
 
     /**

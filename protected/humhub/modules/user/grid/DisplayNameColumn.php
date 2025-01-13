@@ -18,7 +18,6 @@ use yii\bootstrap\Html;
  */
 class DisplayNameColumn extends BaseColumn
 {
-
     /**
      * @inheritdoc
      */
@@ -43,11 +42,11 @@ class DisplayNameColumn extends BaseColumn
         $user = $this->getUser($model);
 
         $badge = '';
-        if ($user->auth_mode !== 'local') {
-            $badge = '&nbsp;<span class="badge">'.$user->auth_mode.'</span>';
+        if ($user->auth_mode !== 'local' && Yii::$app->user->isAdmin()) {
+            $badge = '&nbsp;<span class="badge">' . $user->auth_mode . '</span>';
         }
         return '<div>' . Html::encode($user->displayName) . $badge . '<br> ' .
-                '<small>' . Html::encode($user->displayNameSub) . '</small></div>';
+            '<small>' . Html::encode($user->displayNameSub) . '</small></div>';
     }
 
 }

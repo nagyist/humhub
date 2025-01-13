@@ -14,11 +14,15 @@ use Yii;
 
 /**
  * Markdown Profile Field
- * 
+ *
  * @since 1.1
  */
 class MarkdownEditor extends BaseType
 {
+    /**
+     * @inheritdoc
+     */
+    public $type = 'markdown';
 
     /**
      * @inheritdoc
@@ -26,12 +30,22 @@ class MarkdownEditor extends BaseType
     public function getFormDefinition($definition = [])
     {
         return parent::getFormDefinition([
-                    get_class($this) => [
-                        'type' => 'form',
-                        'title' => Yii::t('UserModule.profile', 'Text area field options'),
-                        'elements' => [
-                        ]
-                    ]]);
+            get_class($this) => [
+                'type' => 'form',
+                'title' => Yii::t('UserModule.profile', 'Text area field options'),
+                'elements' => [
+                ],
+            ]]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldFormDefinition(User $user = null, array $options = []): array
+    {
+        return parent::getFieldFormDefinition($user, array_merge([
+            'htmlOptions' => ['backupInterval' => 0],
+        ], $options));
     }
 
     /**
@@ -57,18 +71,4 @@ class MarkdownEditor extends BaseType
         return parent::getFieldRules($rules);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getFieldFormDefinition(User $user = null)
-    {
-        return [$this->profileField->internal_name => [
-                'type' => 'markdown',
-                'class' => 'form-control',
-                'readonly' => (!$this->profileField->editable),
-                'rows' => '3'
-        ]];
-    }
-
 }
-?>

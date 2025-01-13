@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.humhub.org/
  * @copyright Copyright (c) 2021 HumHub GmbH & Co. KG
@@ -20,7 +21,6 @@ use yii\web\HttpException;
  */
 class UserPeopleController extends Controller
 {
-
     /**
      * @inheritdoc
      */
@@ -40,10 +40,10 @@ class UserPeopleController extends Controller
     /**
      * @inheritdoc
      */
-    public function getAccessRules()
+    protected function getAccessRules()
     {
         return [
-            ['permissions' => [ManageSettings::class]]
+            ['permissions' => [ManageSettings::class]],
         ];
     }
 

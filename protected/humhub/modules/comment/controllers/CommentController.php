@@ -10,7 +10,7 @@ namespace humhub\modules\comment\controllers;
 
 use humhub\components\access\ControllerAccess;
 use humhub\components\Controller;
-use humhub\libs\Helpers;
+use humhub\helpers\DataTypeHelper;
 use humhub\modules\comment\models\Comment;
 use humhub\modules\comment\models\forms\AdminDeleteCommentForm;
 use humhub\modules\comment\models\forms\CommentForm;
@@ -22,14 +22,15 @@ use humhub\modules\comment\widgets\Form;
 use humhub\modules\comment\widgets\ShowMore;
 use humhub\modules\content\components\ContentActiveRecord;
 use humhub\modules\file\handler\FileHandlerCollection;
+use Throwable;
 use Yii;
-use yii\base\BaseObject;
-use yii\data\Pagination;
+use yii\db\StaleObjectException;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * CommentController provides all comment related actions.
@@ -41,9 +42,9 @@ use yii\web\NotFoundHttpException;
 class CommentController extends Controller
 {
     /**
-     * @return array
+     * @inheritdoc
      */
-    public function getAccessRules()
+    protected function getAccessRules()
     {
         return [
             [ControllerAccess::RULE_LOGGED_IN_ONLY => ['post', 'edit', 'delete']],
@@ -66,7 +67,8 @@ class CommentController extends Controller
             $modelClass = Yii::$app->request->get('objectModel', Yii::$app->request->post('objectModel'));
             $modelPk = (int)Yii::$app->request->get('objectId', Yii::$app->request->post('objectId'));
 
-            Helpers::CheckClassType($modelClass, [Comment::class, ContentActiveRecord::class]);
+            /** @var Comment|ContentActiveRecord $modelClass */
+            $modelClass = DataTypeHelper::matchClassType($modelClass, [Comment::class, ContentActiveRecord::class], true);
             $this->target = $modelClass::findOne(['id' => $modelPk]);
 
             if (!$this->target) {
@@ -89,30 +91,34 @@ class CommentController extends Controller
      */
     public function actionShow()
     {
-        //TODO: Dont use query logic in controller layer...
-
-        $query = Comment::find();
-        $query->orderBy('created_at DESC');
-        $query->where(['object_model' => get_class($this->target), 'object_id' => $this->target->getPrimaryKey()]);
-
-        $pagination = new Pagination([
-            'totalCount' => Comment::GetCommentCount(get_class($this->target), $this->target->getPrimaryKey()),
-            'pageSize' => Yii::$app->request->get('pageSize', $this->module->commentsBlockLoadSize)
-        ]);
-
-        // If need to load more than 1 page per request
-        $pageNum = Yii::$app->request->get('pageNum', 1);
-
-        $query->offset($pagination->offset)->limit($pagination->limit * $pageNum);
-        $comments = array_reverse($query->all());
-
-        if ($pageNum > 1) {
-            $pagination->setPage($pagination->page + $pageNum - 1);
+        $commentId = (int)Yii::$app->request->get('commentId');
+        $type = Yii::$app->request->get('type', ShowMore::TYPE_PREVIOUS);
+        $pageSize = (int)Yii::$app->request->get('pageSize', $this->module->commentsBlockLoadSize);
+        if ($pageSize > $this->module->commentsBlockLoadSize) {
+            $pageSize = $this->module->commentsBlockLoadSize;
         }
 
-        $output = ShowMore::widget(['pagination' => $pagination, 'object' => $this->target]);
+        $comments = Comment::getMoreComments($this->target, $commentId, $type, $pageSize);
+
+        $output = '';
+        if ($type === ShowMore::TYPE_PREVIOUS) {
+            $output .= ShowMore::widget([
+                'object' => $this->target,
+                'pageSize' => $pageSize,
+                'commentId' => isset($comments[0]) ? $comments[0]->id : null,
+                'type' => $type,
+            ]);
+        }
         foreach ($comments as $comment) {
             $output .= CommentWidget::widget(['comment' => $comment]);
+        }
+        if ($type === ShowMore::TYPE_NEXT && count($comments) > 1) {
+            $output .= ShowMore::widget([
+                'object' => $this->target,
+                'pageSize' => $pageSize,
+                'commentId' => $comments[count($comments) - 1]->id,
+                'type' => $type,
+            ]);
         }
 
         if (Yii::$app->request->get('mode') === 'popup') {
@@ -163,7 +169,7 @@ class CommentController extends Controller
         if ($form->load(Yii::$app->request->post()) && $form->save()) {
             return $this->renderAjaxContent(CommentWidget::widget([
                 'comment' => $form->comment,
-                'justEdited' => true
+                'justEdited' => true,
             ]));
         }
 
@@ -174,7 +180,7 @@ class CommentController extends Controller
         $submitUrl = Url::to(['/comment/comment/edit',
             'id' => $comment->id,
             'objectModel' => $comment->object_model,
-            'objectId' => $comment->object_id
+            'objectId' => $comment->object_id,
         ]);
 
         return $this->renderAjax('edit', [
@@ -196,7 +202,7 @@ class CommentController extends Controller
     {
         $comment = $this->getComment($id);
 
-        if (!$comment->canRead()) {
+        if (!$comment->canView()) {
             throw new ForbiddenHttpException();
         }
 
@@ -208,12 +214,12 @@ class CommentController extends Controller
 
     /**
      * @param $id
-     * @return \yii\web\Response
+     * @return Response
      * @throws ForbiddenHttpException
      * @throws HttpException
      * @throws NotFoundHttpException
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -240,7 +246,7 @@ class CommentController extends Controller
                 $commentDeleted->saveRecord($comment->createdBy);
 
                 $commentDeleted->record->updateAttributes([
-                    'send_web_notifications' => 1
+                    'send_web_notifications' => 1,
                 ]);
             }
         }
@@ -267,7 +273,7 @@ class CommentController extends Controller
         return [
             'header' => Yii::t('CommentModule.base', '<strong>Delete</strong> comment?'),
             'body' => AdminDeleteModal::widget([
-                'model' => new AdminDeleteCommentForm()
+                'model' => new AdminDeleteCommentForm(),
             ]),
             'confirmText' => Yii::t('CommentModule.base', 'Confirm'),
             'cancelText' => Yii::t('CommentModule.base', 'Cancel'),

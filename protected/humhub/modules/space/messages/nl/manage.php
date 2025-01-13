@@ -8,7 +8,7 @@ return array (
   '<strong>Space</strong> Modules' => '<strong>Ruimte</strong> Modules',
   '<strong>Space</strong> settings' => '<strong>Ruimte</strong> instellingen',
   'Actions' => 'Acties',
-  'Activate' => 'Activeren',
+  'Enable' => 'Activeren',
   'Add <strong>Modules</strong>' => '<strong>Modules</strong> toevoegen',
   'Advanced access settings' => 'Geavanceerde instellingen voor toegang',
   'All members excluding moderators and administrators of this Space will be removed. All pending invitations and membership requests will be terminated.' => 'Alle leden, behalve moderators en beheerders van deze ruimte, worden verwijderd. Alle openstaande uitnodigingen en lidmaatschapsverzoeken worden beëindigd.',
@@ -30,6 +30,7 @@ return array (
   'Members' => 'Leden',
   'Modules' => 'Modules',
   'Next' => 'Volgende',
+  'Only global administrators can change this value' => 'Alleen systeembeheerders kunnen deze waarde wijzigen',
   'Owner' => 'Eigenaar',
   'Pending Approvals' => 'Wachtende verzoeken',
   'Pending Invites' => 'Wachtende uitnodigingen',
@@ -54,6 +55,4 @@ return array (
   'Unarchive' => 'Dearchiveer',
   'e.g. example for {baseUrl}/s/example' => 'Dat is bijvoorbeeld voor {baseUrl}/s/voorbeeld',
   'never' => 'nooit',
-  'the default start page of this space for members' => 'De standaard startpagina voor leden van deze ruimte.',
-  'the default start page of this space for visitors' => 'De standaard startpagina voor bezoekers van deze ruimte.',
 );

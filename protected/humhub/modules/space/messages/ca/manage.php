@@ -9,7 +9,7 @@ return [
     '<strong>Space</strong> Modules' => '<strong>Mòduls</strong> de l\'espai',
     '<strong>Space</strong> settings' => '<strong>Configuració</strong> de l\'espai',
     'Actions' => 'Accions',
-    'Activate' => 'Activar',
+    'Enable' => 'Activar',
     'Add <strong>Modules</strong>' => 'Afegeix <strong>Mòduls</strong>',
     'Advanced access settings' => 'Configuració avançada',
     'All members excluding moderators and administrators of this Space will be removed. All pending invitations and membership requests will be terminated.' => 'Tots els membres, excepte els moderadors i administradors d\'aquest espai, seran eliminats. Es cancel·laran totes les invitacions i sol·licituds de pertanença pendents.',
@@ -54,7 +54,6 @@ return [
     'Unarchive' => 'Treu-la de l\'arxiu',
     'e.g. example for {baseUrl}/s/example' => 'exemple per {baseUrl}/s/example',
     'never' => 'mai',
-    'the default start page of this space for members' => 'la pàgina d\'inici predeterminada d\'aquest espai per als membres',
-    'the default start page of this space for visitors' => 'la pàgina d\'inici predeterminada d\'aquest espai per als visitants',
+    'Only global administrators can change this value' => '',
     'The URL has already been taken.' => '',
 ];

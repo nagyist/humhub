@@ -3,6 +3,7 @@
 namespace humhub\modules\space\widgets;
 
 use humhub\modules\admin\permissions\ManageUsers;
+use humhub\modules\space\models\forms\InviteForm;
 use Yii;
 use yii\base\Widget;
 
@@ -17,7 +18,7 @@ class InviteModal extends Widget
     public $submitAction;
 
     /**
-     * @var \humhub\modules\space\models\forms\InviteForm
+     * @var InviteForm
      */
     public $model;
 
@@ -31,7 +32,8 @@ class InviteModal extends Widget
         }
 
         return $this->render('inviteModal', [
-            'canInviteExternal' => Yii::$app->getModule('user')->settings->get('auth.internalUsersCanInvite'),
+            'canInviteByEmail' => $this->model->canInviteByEmail(),
+            'canInviteByLink' => $this->model->canInviteByLink(),
             'submitText' => $this->submitText,
             'submitAction' => $this->submitAction,
             'model' => $this->model,

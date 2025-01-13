@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Confirm</strong> comment deleting' => '<strong>Konfimasi</strong> menghapus komentar',
   '<strong>Delete</strong> comment?' => '<strong>Hapus</strong> komentar?',
   '<strong>Permalink</strong> to this comment' => '<strong>Permalink</strong> ke komentar ini',
@@ -21,12 +21,12 @@ return array (
   'Reply' => 'Balas',
   'Send a notification to author' => 'Kirim notifikasi ke penulis',
   'Show' => 'Tampilkan',
-  'Show all {total} comments' => 'Lihat semua {total} komentar',
-  'Show {count} more comments' => 'Lihat {count} komentar lainnya',
+  'Show next {count} comments' => 'Tampilkan {count} komentar berikutnya',
+  'Show previous {count} comments' => 'Tampilkan {count} komentar sebelumnya',
   'The comment must not be empty!' => 'Komentar tidak boleh kosong',
   'Whenever a new comment was written.' => 'Kapanpun sebuah komentar baru telah ditulis',
   'Write a new comment...' => 'Tulis komentar baru...',
   'Write a new reply...' => 'Tulis balasan baru...',
   'comment' => 'Komentar',
   '{displayName} wrote a new comment ' => '{displayName} menulis komentar baru',
-);
+];

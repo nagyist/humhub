@@ -235,16 +235,6 @@ humhub.module('comment', function (module, require, $) {
         });
     };
 
-    var showAll = function (evt) {
-        client.post(evt, {dataType: 'html'}).then(function (response) {
-            var $container = evt.$trigger.parent();
-            $container.html(response.html);
-            additions.applyTo($container);
-        }).catch(function (err) {
-            module.log.error(err, true);
-        });
-    };
-
     var showMore = function (evt) {
         loader.set(evt.$trigger, {
             'size': '8px',
@@ -256,9 +246,17 @@ humhub.module('comment', function (module, require, $) {
         client.post(evt, {dataType: 'html'}).then(function (response) {
             var $container = evt.$trigger.closest('.comment');
             var $html = $(response.html);
-            $container.prepend($html);
+            evt.$trigger.data('type') === 'previous'
+                ? $container.prepend($html)
+                : $container.append($html);
             evt.$trigger.closest('.showMore').remove();
             additions.applyTo($html);
+
+            // Highlight currently searching keywords in the loaded comments
+            const contentSearchKeyword = $('.container-contents .form-search input[name=keyword]');
+            if (contentSearchKeyword.length) {
+                additions.highlightWords($html, contentSearchKeyword.val());
+            }
         }).catch(function (err) {
             module.log.error(err, true);
             loader.unset(evt.$trigger);
@@ -307,7 +305,7 @@ humhub.module('comment', function (module, require, $) {
             target.slideToggle();
         }
 
-        if(!visible) {
+        if (!visible && !window.comments_collapsed) {
             target.find('.humhub-ui-richtext').trigger('focus');
         }
     }
@@ -332,11 +330,11 @@ humhub.module('comment', function (module, require, $) {
     };
 
     var scrollActive = function (evt) {
-        evt.$trigger.closest('.comment-create-input-group').addClass('scrollActive');
+        evt.$trigger.closest('.content-create-input-group').addClass('scrollActive');
     };
 
     var scrollInactive = function (evt) {
-        evt.$trigger.closest('.comment-create-input-group').removeClass('scrollActive');
+        evt.$trigger.closest('.content-create-input-group').removeClass('scrollActive');
     };
 
     module.export({
@@ -345,7 +343,6 @@ humhub.module('comment', function (module, require, $) {
         Form: Form,
         scrollActive: scrollActive,
         scrollInactive: scrollInactive,
-        showAll: showAll,
         showMore: showMore,
         toggleComment: toggleCommentHandler
     });

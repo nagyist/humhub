@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Confirm</strong> comment deleting' => '<strong>Bekräfta</strong> borttagning av kommentar',
   '<strong>Delete</strong> comment?' => '<strong>Ta bort</strong> kommentar?',
   '<strong>Permalink</strong> to this comment' => '<strong>Permalänk</strong> till den här kommentaren',
@@ -21,12 +21,12 @@ return array (
   'Reply' => 'Svara',
   'Send a notification to author' => 'Skicka ett meddelande till författaren',
   'Show' => 'Visa',
-  'Show all {total} comments' => 'Visa alla {total} kommentarer',
-  'Show {count} more comments' => 'Visa {count} fler kommentarer',
+  'Show next {count} comments' => 'Visa nästa {count} kommentarer',
+  'Show previous {count} comments' => 'Visa tidigare {count} kommentarer',
   'The comment must not be empty!' => 'Kommentaren kan inte vara tom!',
   'Whenever a new comment was written.' => 'Närhelst en kommentar var skriven.',
   'Write a new comment...' => 'Skriv en ny kommentar...',
   'Write a new reply...' => 'Skriv ett nytt svar...',
   'comment' => 'kommentar',
   '{displayName} wrote a new comment ' => '{displayName} skrev en kommentar',
-);
+];

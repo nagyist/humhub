@@ -9,12 +9,12 @@
 use humhub\assets\AppAsset;
 use humhub\assets\CoreBundleAsset;
 use humhub\assets\JuiBootstrapBridgeAsset;
-use humhub\components\assets\AssetBundle;
 use humhub\components\assets\WebStaticAssetBundle;
 use humhub\modules\ui\view\components\View;
 use yii\bootstrap\BootstrapAsset;
 use yii\bootstrap\BootstrapPluginAsset;
 use yii\helpers\ArrayHelper;
+use yii\jui\JuiAsset;
 use yii\web\JqueryAsset;
 
 /**
@@ -53,7 +53,7 @@ return [
                 'js/humhub-app.js',
                 'css/humhub-app.css',
             ],
-            'depends' => AppAsset::STATIC_DEPENDS
+            'depends' => AppAsset::STATIC_DEPENDS,
         ],
         CoreBundleAsset::BUNDLE_NAME => [
             'class' => WebStaticAssetBundle::class,
@@ -76,17 +76,20 @@ return [
         'baseUrl' => '@web-static/assets',
         'bundles' => [
             JqueryAsset::class => [
-                'sourcePath' => '@npm/jquery/dist'
+                'sourcePath' => '@npm/jquery/dist',
+            ],
+            JuiAsset::class => [
+                'sourcePath' => '@npm/jquery-ui/dist',
             ],
             BootstrapPluginAsset::class => [
                 'js' => ['js/bootstrap.min.js'],
                 'depends' => [
                     JqueryAsset::class,
                     BootstrapAsset::class,
-                    JuiBootstrapBridgeAsset::class
-                ]
+                    JuiBootstrapBridgeAsset::class,
+                ],
             ],
 
-        ]
+        ],
     ],
 ];

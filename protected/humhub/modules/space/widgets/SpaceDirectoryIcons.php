@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.humhub.org/
  * @copyright Copyright (c) 2021 HumHub GmbH & Co. KG
@@ -8,7 +9,6 @@
 namespace humhub\modules\space\widgets;
 
 use humhub\components\Widget;
-use humhub\modules\space\models\Membership;
 use humhub\modules\space\models\Space;
 use Yii;
 
@@ -20,7 +20,6 @@ use Yii;
  */
 class SpaceDirectoryIcons extends Widget
 {
-
     /**
      * @var Space
      */
@@ -36,7 +35,11 @@ class SpaceDirectoryIcons extends Widget
         }
 
         $membership = $this->space->getMembership();
-        $membersCount = Membership::getSpaceMembersQuery($this->space)->active()->visible()->count();
+
+        $membersCountQuery = $this->space->getMemberListService()->getReadableQuery();
+        $membersCount = Yii::$app->runtimeCache->getOrSet(__METHOD__ . Yii::$app->user->id . '-' . $this->space->id, function () use ($membersCountQuery) {
+            return $membersCountQuery->count();
+        });
 
         return $this->render('spaceDirectoryIcons', [
             'space' => $this->space,

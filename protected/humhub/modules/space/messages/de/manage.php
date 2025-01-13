@@ -8,7 +8,7 @@ return array (
   '<strong>Space</strong> Modules' => '<strong>Space</strong> Module',
   '<strong>Space</strong> settings' => '<strong>Space</strong>-Einstellungen',
   'Actions' => 'Aktionen',
-  'Activate' => 'Aktivieren',
+  'Enable' => 'Aktivieren',
   'Add <strong>Modules</strong>' => '<strong>Module</strong> hinzufügen',
   'Advanced access settings' => 'Erweiterte Zugriffseinstellungen',
   'All members excluding moderators and administrators of this Space will be removed. All pending invitations and membership requests will be terminated.' => 'Alle Mitglieder, mit Ausnahme der Moderatoren und Administratoren dieses Space, werden entfernt. Alle ausstehenden Einladungen und Mitgliedsanträge werden gelöscht.',
@@ -30,6 +30,7 @@ return array (
   'Members' => 'Mitglieder',
   'Modules' => 'Module',
   'Next' => 'Weiter',
+  'Only global administrators can change this value' => 'Nur Netzwerk-Administratoren können diesen Wert ändern.',
   'Owner' => 'Besitzer',
   'Pending Approvals' => 'Ausstehende Genehmigungen',
   'Pending Invites' => 'Ausstehende Einladungen',
@@ -54,6 +55,4 @@ return array (
   'Unarchive' => 'Archivierung aufheben',
   'e.g. example for {baseUrl}/s/example' => 'z. B. example für {baseUrl}/s/example',
   'never' => 'Nie',
-  'the default start page of this space for members' => 'Die Startseite für Mitglieder dieses Space',
-  'the default start page of this space for visitors' => 'Die Startseite für Nicht-Mitglieder des Spaces',
 );

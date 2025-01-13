@@ -1,14 +1,16 @@
 <?php
 
 return [
-    'A TLS/SSL is strongly favored in production environments to prevent passwords from be transmitted in clear text.' => '',
+    'Hostname' => '主機名稱',
+    'Password' => '密碼',
+    'Port' => 'Port',
+    'Username' => '使用者名稱',
     'Base DN' => '',
     'Defines the filter to apply, when login is attempted. %s replaces the username in the login action. Example: &quot;(sAMAccountName=%s)&quot; or &quot;(uid=%s)&quot;' => '',
     'E-Mail Address Attribute' => '',
     'Enable LDAP Support' => '',
     'Encryption' => '',
     'Fetch/Update Users Automatically' => '',
-    'Hostname' => '',
     'ID Attribute' => '',
     'Ignored LDAP entries' => '',
     'LDAP' => '',
@@ -18,8 +20,6 @@ return [
     'Login Filter' => '',
     'Not changeable LDAP attribute to unambiguously identify the user in the directory. If empty the user will be determined automatically by e-mail address or username. Examples: objectguid (ActiveDirectory) or uidNumber (OpenLDAP)' => '',
     'One DN per line which should not be imported automatically.' => '',
-    'Password' => '',
-    'Port' => '',
     'Specify your LDAP-backend used to fetch user accounts.' => '',
     'Status: Error! (Message: {message})' => '',
     'Status: OK! ({userCount} Users)' => '',
@@ -28,6 +28,5 @@ return [
     'The default credentials password (used only with username above).' => '',
     'The default credentials username. Some servers require that this be in DN form. This must be given in DN form if the LDAP server requires a DN to bind and binding should be possible with simple usernames.' => '',
     'User Filter' => '',
-    'Username' => '',
     'Username Attribute' => '',
 ];

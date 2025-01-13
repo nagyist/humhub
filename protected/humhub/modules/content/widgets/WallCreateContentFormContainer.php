@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.humhub.org/
  * @copyright Copyright (c) 2022 HumHub GmbH & Co. KG
@@ -11,8 +12,6 @@ use humhub\libs\Sort;
 use humhub\modules\content\widgets\stream\WallStreamEntryWidget;
 use humhub\components\Widget;
 use humhub\modules\content\components\ContentContainerActiveRecord;
-use humhub\modules\content\components\ContentActiveRecord;
-use Yii;
 use yii\web\HttpException;
 
 /**
@@ -71,7 +70,7 @@ class WallCreateContentFormContainer extends Widget
 
             $forms[] = [
                 'class' => $wallEntryWidget->createFormClass,
-                'sortOrder' => $wallEntryWidget->createFormSortOrder ?? '9999999-' . $content->getContentName(),
+                'sortOrder' => [$wallEntryWidget->createFormSortOrder, ucfirst($content->getContentName())],
             ];
         }
 

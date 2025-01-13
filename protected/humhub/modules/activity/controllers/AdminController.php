@@ -25,7 +25,7 @@ class AdminController extends Controller
     /**
      * @inheritdoc
      */
-    public function getAccessRules()
+    protected function getAccessRules()
     {
         return [
             ['permissions' => ManageSettings::class],
@@ -44,7 +44,7 @@ class AdminController extends Controller
         }
 
         return $this->render('defaults', [
-            'model' => $model
+            'model' => $model,
         ]);
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.humhub.org/
  * @copyright Copyright (c) 2018 HumHub GmbH & Co. KG
@@ -18,12 +19,13 @@ class DefaultStreamFilter extends StreamQueryFilter
     /**
      * Default filters
      */
-    const FILTER_FILES = "entry_files";
-    const FILTER_ARCHIVED = "entry_archived";
-    const FILTER_MINE = "entry_mine";
-    const FILTER_INVOLVED = "entry_userinvolved";
-    const FILTER_PRIVATE = "visibility_private";
-    const FILTER_PUBLIC = "visibility_public";
+    public const FILTER_FILES = "entry_files";
+    public const FILTER_ARCHIVED = "entry_archived";
+    public const FILTER_MINE = "entry_mine";
+    public const FILTER_INVOLVED = "entry_userinvolved";
+    public const FILTER_PRIVATE = "visibility_private";
+    public const FILTER_PUBLIC = "visibility_public";
+    public const FILTER_HIDDEN = "entry_hidden";
 
     /**
      * Array of stream filters to apply to the query.
@@ -45,7 +47,7 @@ class DefaultStreamFilter extends StreamQueryFilter
     public function rules()
     {
         return [
-            [['filters'], 'safe']
+            [['filters'], 'safe'],
         ];
     }
 
@@ -64,7 +66,7 @@ class DefaultStreamFilter extends StreamQueryFilter
 
         if ($this->isFilterActive(self::FILTER_ARCHIVED)) {
             $this->filterArchived();
-        } else if (!$this->streamQuery->isSingleContentQuery()) {
+        } elseif (!$this->streamQuery->isSingleContentQuery()) {
             // Only omit archived content by default when we load more than one entry
             $this->unFilterArchived();
         }
@@ -85,6 +87,14 @@ class DefaultStreamFilter extends StreamQueryFilter
         } elseif ($this->isFilterActive(self::FILTER_PUBLIC)) {
             $this->filterPublic();
         }
+
+        if ($this->isFilterActive(self::FILTER_HIDDEN)) {
+            $this->filterHidden();
+        } elseif (!$this->streamQuery->isSingleContentQuery()) {
+            // Only omit hidden content by default when we load more than one entry
+            $this->unFilterHidden();
+        }
+
     }
 
     public function isFilterActive($filter)
@@ -110,8 +120,10 @@ class DefaultStreamFilter extends StreamQueryFilter
         $this->query->leftJoin('space AS spaceArchived', 'contentcontainer.pk = spaceArchived.id AND contentcontainer.class = :spaceClass', [':spaceClass' => Space::class]);
 
         if (!empty($this->streamQuery->container->contentcontainer_id)) {
-            $this->query->andWhere('(spaceArchived.status != :statusArchived OR spaceArchived.status IS NULL OR spaceArchived.contentcontainer_id = :containerId)',
-                [':statusArchived' => Space::STATUS_ARCHIVED, ':containerId' => $this->streamQuery->container->contentcontainer_id]);
+            $this->query->andWhere(
+                '(spaceArchived.status != :statusArchived OR spaceArchived.status IS NULL OR spaceArchived.contentcontainer_id = :containerId)',
+                [':statusArchived' => Space::STATUS_ARCHIVED, ':containerId' => $this->streamQuery->container->contentcontainer_id],
+            );
         } else {
             $this->query->andWhere('(spaceArchived.status != :statusArchived OR spaceArchived.status IS NULL)', [':statusArchived' => Space::STATUS_ARCHIVED]);
         }
@@ -153,6 +165,18 @@ class DefaultStreamFilter extends StreamQueryFilter
     protected function filterPrivate()
     {
         $this->query->andWhere(['content.visibility' => Content::VISIBILITY_PRIVATE]);
+        return $this;
+    }
+
+    private function filterHidden()
+    {
+        $this->query->andWhere(['content.hidden' => 1]);
+        return $this;
+    }
+
+    private function unFilterHidden()
+    {
+        $this->query->andWhere(['content.hidden' => 0]);
         return $this;
     }
 }

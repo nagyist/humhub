@@ -20,6 +20,10 @@ use Yii;
  */
 class Checkbox extends BaseType
 {
+    /**
+     * @inheritdoc
+     */
+    public $type = 'checkbox';
 
     /**
      * Field Default Checkbox
@@ -36,7 +40,7 @@ class Checkbox extends BaseType
     public function rules()
     {
         return [
-            [['default'], 'in', 'range' => [0, 1]]
+            [['default'], 'in', 'range' => [0, 1]],
         ];
     }
 
@@ -58,11 +62,11 @@ class Checkbox extends BaseType
                         'type' => 'dropdownlist',
                         'items' => [
                             0 => 'Unchecked',
-                            1 => 'Checked'
-                        ]
-                    ]
-                ]
-            ]
+                            1 => 'Checked',
+                        ],
+                    ],
+                ],
+            ],
         ]);
     }
 
@@ -72,8 +76,8 @@ class Checkbox extends BaseType
     public function save()
     {
         $columnName = $this->profileField->internal_name;
-        if (!\humhub\modules\user\models\Profile::columnExists($columnName)) {
-            $query = Yii::$app->db->getQueryBuilder()->addColumn(\humhub\modules\user\models\Profile::tableName(), $columnName, 'INT(1) DEFAULT '.$this->default);
+        if (!Profile::columnExists($columnName)) {
+            $query = Yii::$app->db->getQueryBuilder()->addColumn(Profile::tableName(), $columnName, 'INT(1) DEFAULT ' . $this->default);
             Yii::$app->db->createCommand($query)->execute();
         }
 
@@ -90,7 +94,7 @@ class Checkbox extends BaseType
     {
         $profileField = $this->profileField;
         if ($profileField->required) {
-            $rules[] = [$profileField->internal_name, function($attribute) use ($profileField) {
+            $rules[] = [$profileField->internal_name, function ($attribute) use ($profileField) {
                 if (!$this->$attribute) {
                     $this->addError($attribute, Yii::t('UserModule.profile', '{attribute} is required!', ['{attribute}' => $profileField->title]));
                 }
@@ -99,18 +103,6 @@ class Checkbox extends BaseType
             $rules[] = [$profileField->internal_name, 'in', 'range' => [0, 1]];
         }
         return parent::getFieldRules($rules);
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getFieldFormDefinition(User $user = null)
-    {
-        return [$this->profileField->internal_name => [
-            'type' => 'checkbox',
-            'class' => 'form-control',
-        ]];
     }
 
     /**

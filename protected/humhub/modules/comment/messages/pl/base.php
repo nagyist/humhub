@@ -1,7 +1,7 @@
 <?php
 return array (
   '<strong>Confirm</strong> comment deleting' => '<strong>Potwierdź</strong> usunięcie komentarza',
-  '<strong>Delete</strong> comment?' => '',
+  '<strong>Delete</strong> comment?' => '<strong>Usunąć</strong> komentarz?',
   '<strong>Permalink</strong> to this comment' => '<strong>Link </strong> do tego komentarza',
   'Cancel' => 'Anuluj',
   'Cancel Edit' => 'Anuluj Edycję',
@@ -19,10 +19,10 @@ return array (
   'Read full comment...' => 'Przeczytał cały komentarz...',
   'Reason' => 'Powód',
   'Reply' => 'Odpowiedz',
-  'Send a notification to author' => '',
+  'Send a notification to author' => 'Wyślij powiadomienie do autora',
   'Show' => 'Pokaż',
-  'Show all {total} comments' => 'Pokaż wszystkie komentarze: {total}',
-  'Show {count} more comments' => 'Pokaż {count} kolejnych komentarzy',
+  'Show next {count} comments' => 'Pokaż następne {count} komentarze/y',
+  'Show previous {count} comments' => 'Pokaż poprzednie {count} komentarze/y',
   'The comment must not be empty!' => 'Komentarz nie może być pusty!',
   'Whenever a new comment was written.' => 'Za każdym razem gdy zostanie napisany nowy komentarz.',
   'Write a new comment...' => 'Napisz nowy komentarz...',
